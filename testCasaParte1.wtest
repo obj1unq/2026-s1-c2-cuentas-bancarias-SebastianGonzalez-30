@@ -1,9 +1,16 @@
 import casa.*
+import cuentasBancarias.*
 
-describe "casa de pepe y julian" {
+describe "casa de pepe y julian con cuentas bancarias" {
 
-  // Descomentar si hiciera falta un metodo para inicializar el ambiente
-  // method initialize() {
-  // }
+  test "cuenta con gastos: caso normal" {
+
+    casa.setAsignarCuenta(cuentaCorriente)
+    cuentaCorriente.setSaldoALaCuenta(300)
+    casa.pagarGastos(200)
+    assert.equals(100, cuentaCorriente.saldo())
+    assert.equals(200, casa.gastoTotal())
+  }
+  
 
 }
