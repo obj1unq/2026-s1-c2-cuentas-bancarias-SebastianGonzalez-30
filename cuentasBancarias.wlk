@@ -73,7 +73,7 @@ object cuentaConGastos {
 
     method extraerSumaMonetaria(cantidad) {
 
-        saldo= saldo - (cantidad + costoPorOperacion) 
+        saldo= saldo - cantidad 
         
     }
     
@@ -82,6 +82,89 @@ object cuentaConGastos {
     method verificarSaldoParaCostoPorOperacion() {
 
         return saldo > costoPorOperacion
+
+    }
+
+    method validarImporteACuenta(cantidadAAñadir) {
+
+        if(not(self.verificarSaldoParaCostoPorOperacion())) {
+
+            self.error("no puede importar porque cantidadAAñadir > costoPorOperacion")
+
+        }
+
+    }
+}
+
+
+object cuentaCombinada {
+  
+    var cuentaPrimaria = null
+    var cuentaSecundaria = null
+    var costoPorOperacion = 20
+    
+
+    method cuentaPrimaria(_cuentaBancaria) {
+      
+        cuentaPrimaria = _cuentaBancaria
+
+    }
+
+    method cuentaSecundaria(_cuentaBancaria) {
+      
+        cuentaSecundaria = _cuentaBancaria
+
+    }
+
+        // calcula el saldo de la cuenta combinada
+    method saldo() {
+
+        return cuentaPrimaria.saldo().max(0) + cuentaSecundaria.saldo().max(0)
+
+    }
+    // getter del costo por operacion
+    method costoPorOperacion() {
+
+        return costoPorOperacion
+
+    }
+
+    //setter para el costo por operacion
+    method setCostoPorOperacion(tarifa) {
+
+        costoPorOperacion = tarifa
+
+    }
+
+    method depositarSumaMonetaria(cantidad) {
+
+    self.validarImporteACuenta(cantidad) //valida que se pueda hacer la transaccion antes de hacerla
+    
+    cuentaPrimaria.depositarSumaMonetaria(cantidad)
+        
+    }
+
+    method extraerSumaMonetaria(cantidad) {
+
+        self.validarImporteACuenta(cantidad) 
+         //debe extraer hasta que sea 0 (o lo que necesite)
+        
+
+        
+        
+    }
+    
+    method extraerCantidadDeLasCuentas(cantidad) {
+
+        
+
+    }
+
+
+    //consulta para verificar que se pueda realizar la operacion
+    method verificarSaldoParaCostoPorOperacion() {
+
+        return cuentaPrimaria.saldo() > costoPorOperacion || cuentaSecundaria.saldo() > costoPorOperacion
 
     }
 
